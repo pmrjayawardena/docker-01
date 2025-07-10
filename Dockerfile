@@ -1,5 +1,11 @@
-# FROM alpine:3.14
-# CMD ["echo", "Hello, World!"]
-FROM nginx
-
-COPY html /usr/share/nginx/html
+# syntax=docker/dockerfile:1
+FROM python:3.10-alpine
+WORKDIR /code
+ENV FLASK_APP=demo.py
+ENV FLASK_RUN_HOST=0.0.0.0
+RUN apk add --no-cache gcc musl-dev linux-headers
+COPY python/requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+EXPOSE 5000
+COPY python/demo.py .
+CMD ["flask", "run", "--debug"]
